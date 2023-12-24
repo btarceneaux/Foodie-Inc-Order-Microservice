@@ -5,7 +5,7 @@ import inc.foodie.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import inc.foodie.bean.Order;
+import inc.foodie.bean.Orders;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class OrderController
      * @return : Returns all orders
      */
     @GetMapping("/order")
-    public List<Order> getAllOrders()
+    public List<Orders> getAllOrders()
     {
         return service.getAllOrders();
     }
@@ -32,18 +32,18 @@ public class OrderController
      * @return : Returns ResponseDto
      */
     @GetMapping("/order/{orderId}")
-    public ResponseDto getBookingByBookingId(@PathVariable int orderId)
+    public ResponseDto getOrderByOrderId(@PathVariable int orderId)
     {
         ResponseDto response = new ResponseDto();
-        Optional<Order> optionalOrder = service.getOrderById(orderId);
+        Optional<Orders> optionalOrder = service.getOrderById(orderId);
 
         if(optionalOrder.isPresent())
         {
-            Order myOrder = optionalOrder.get();
+            Orders myOrders = optionalOrder.get();
             response.setMessage("The order was found");
             response.setStatus(HttpStatus.OK.value());
             response.setTimestamp(new Date());
-            response.setData(myOrder);
+            response.setData(myOrders);
         }
         else
         {
@@ -58,16 +58,15 @@ public class OrderController
 
     /**
      *
-     * @param myOrder : The complete order to be created.
+     * @param myOrders : The complete order to be created.
      * @return : Returns ResponseDto
      */
     @PostMapping("/order")
-    public ResponseDto createCustomer(@RequestBody Order myOrder)
+    public ResponseDto createOrder(@RequestBody Orders myOrders)
     {
         ResponseDto response = new ResponseDto();
 
-        if((myOrder.getOrderList().isEmpty()) ||
-                (myOrder.getDateAndTimeOfOrder() == null))
+        if(myOrders.getOrderItems().isEmpty())
         {
             response.setMessage("The order was not successfully saved because one of the fields were blank.");
             response.setStatus(HttpStatus.EXPECTATION_FAILED.value());
@@ -77,14 +76,21 @@ public class OrderController
             return response;
         }
 
-        Order savedOrder = service.createOrder(myOrder);
+        //Let's transfer all the data except for the id into the field.
+        Orders tempOrder = new Orders();
+        tempOrder.setOrderDateAndTime(new Date());
+        tempOrder.setOrderTotal(myOrders.getOrderTotal());
 
-        if(savedOrder.getOrderIdNumber() > 0)
+        tempOrder.setOrderItems(myOrders.getOrderItems());
+
+        Orders savedOrders = service.createOrder(tempOrder);
+
+        if(savedOrders.getOrderId() > 0)
         {
             response.setMessage("The order was successfully placed.");
             response.setStatus(HttpStatus.OK.value());
             response.setTimestamp(new Date());
-            response.setData(savedOrder);
+            response.setData(savedOrders);
         }
         else
         {
@@ -99,20 +105,20 @@ public class OrderController
 
     /**
      *
-     * @param myOrder : The complete order can contain multiple items.
+     * @param myOrders : The complete order can contain multiple items.
      * @return : Returns ResponseDto
      */
     @PutMapping("/order")
-    public ResponseDto updateCustomer(@RequestBody Order myOrder)
+    public ResponseDto updateOrder(@RequestBody Orders myOrders)
     {
         ResponseDto response = new ResponseDto();
 
-        Order updatedOrder = service.updateOrder(myOrder);
+        Orders updatedOrders = service.updateOrder(myOrders);
 
         response.setMessage("The order was updated successfully.");
         response.setStatus(HttpStatus.OK.value());
         response.setTimestamp(new Date());
-        response.setData(updatedOrder);
+        response.setData(updatedOrders);
 
         return response;
     }

@@ -1,6 +1,6 @@
 package inc.foodie.service;
 
-import inc.foodie.bean.Order;
+import inc.foodie.bean.Orders;
 import inc.foodie.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,19 @@ public class OrderService
     @Autowired
     OrderRepository repository;
 
-    public List<Order> getAllOrders()
+    public List<Orders> getAllOrders()
     {
         return repository.findAll();
     }
 
-    public Optional<Order> getOrderById(int orderId)
+    public Optional<Orders> getOrderById(int orderId)
     {
         return repository.findById(orderId);
     }
 
-    public Order createOrder(Order myOrder)
+    public Orders createOrder(Orders myOrders)
     {
-        return repository.save(myOrder);
+        return repository.save(myOrders);
     }
 
     public int deleteOrder(int orderId)
@@ -43,13 +43,13 @@ public class OrderService
         return result;
     }
 
-    public Order updateOrder(Order updatedOrder)
+    public Orders updateOrder(Orders updatedOrders)
     {
-        boolean exists = repository.existsById(updatedOrder.getOrderIdNumber());
+        boolean exists = repository.existsById(updatedOrders.getOrderId());
 
         if(exists)
         {
-            return repository.save(updatedOrder);
+            return repository.save(updatedOrders);
         }
         else
         {
