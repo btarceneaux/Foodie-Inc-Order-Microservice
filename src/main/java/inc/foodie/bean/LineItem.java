@@ -1,37 +1,16 @@
 package inc.foodie.bean;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Order;
 
 @Entity
 public class LineItem
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int lineItemId;
     private int restaurantId;
     private int quantity;
-
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "my_dish_id", referencedColumnName = "id")
-    private Dish myDish;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Orders order;
-
-    private int dish_item_dish_id;
-
-    public Orders getOrder()
-    {
-        return order;
-    }
-
-    public void setOrder(Orders order)
-    {
-        this.order = order;
-    }
+    private int dishNumber;
 
     public LineItem()
     {
@@ -67,23 +46,13 @@ public class LineItem
         this.quantity = quantity;
     }
 
-    public Dish getMyDish()
+    public int getDishNumber()
     {
-        return myDish;
+        return dishNumber;
     }
 
-    public void setMyDish(Dish myDish)
+    public void setDishNumber(int dishNumber)
     {
-        this.myDish = myDish;
-    }
-
-    public int getDish_item_dish_id()
-    {
-        return dish_item_dish_id;
-    }
-
-    public void setDish_item_dish_id(int dish_item_dish_id)
-    {
-        this.dish_item_dish_id = dish_item_dish_id;
+        this.dishNumber = dishNumber;
     }
 }

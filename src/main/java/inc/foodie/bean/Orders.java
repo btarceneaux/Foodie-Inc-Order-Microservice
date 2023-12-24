@@ -14,10 +14,6 @@ public class Orders
     private double orderTotal;
     @OneToMany(cascade = CascadeType.ALL)
     private List<LineItem> orderItems;
-    @OneToOne
-    @JoinColumn(name = "line_item")
-    private LineItem lineItem;
-
 
     public Orders()
     {
