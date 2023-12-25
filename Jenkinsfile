@@ -10,8 +10,8 @@ pipeline {
 
     environment
     {
-        DBUN='root'
-        DBPW='Myd@t@b@$3'
+        DBUN="${DBUN}"
+        DBPW="${DBPW}"
     }
 
     stages {
